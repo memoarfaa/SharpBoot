@@ -55,6 +55,7 @@
     <EmbeddedResource Include="gtk-gui\gui.stetic">
       <LogicalName>gui.stetic</LogicalName>
     </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\..\Images\fatcow-hosting-icons-3.9.2-all\fatcow-hosting-icons-3.9.2\FatCow_Icons32x32\edit_package.png" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="gtk-gui\generated.cs" />
