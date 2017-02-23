@@ -19,6 +19,12 @@ namespace SharpBoot
         public abstract string GetCode(BootMenu menu);
         public abstract string GetCode(BootMenuItem item);
         public abstract void SetImage(Image img, Size sz);
+        /// <summary>
+        /// New eltorito.img Require grub.cfg in  "/boot/grub"
+        /// Old eltorito.img Require "grub.cfg in "/grub"
+        /// To create eltorito.img in windows "Copy /B i386-pc\cdboot.img+Core.img eltorito.img"
+        /// To create eltorito.img in linux "cat /i386-pc/cdboot.img core.img &gt; eltorito.img"
+        /// </summary>
         public abstract string BinFile { get; set; }
         public abstract byte[] Archive { get; set; }
         public abstract string FolderName { get; set; }
@@ -612,6 +618,12 @@ namespace SharpBoot
             destImage.Save(Path.Combine(WorkingDir, "sharpboot.png"), ImageFormat.Png);
         }
 
+        /// <summary>
+        /// New eltorito.img Require grub.cfg in  "/boot/grub"
+        /// Old eltorito.img Require "grub.cfg in "/grub"
+        /// To create eltorito.img in windows "Copy /B i386-pc\cdboot.img+Core.img eltorito.img"
+        /// To create eltorito.img in linux "cat /i386-pc/cdboot.img core.img &gt; eltorito.img"
+        /// </summary>
         public override string BinFile { get; set; } = "boot/grub/eltorito.img";
         public override byte[] Archive { get; set; } = Resources.grub2;
         public override string FolderName { get; set; } = "grub";
