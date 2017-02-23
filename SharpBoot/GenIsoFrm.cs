@@ -438,7 +438,8 @@ namespace SharpBoot
             }
             else
             {
-                // TODO: Implement working progress printing (I can't get OutputDataReceived to work on my computer)
+                // TODO: Implement working progress printing (OutputDataReceived must work on my computer now)
+
                 ChangeProgress(23, 100, Strings.CreatingISO);
                 Thread.Sleep(500);
                 var p = new Process
@@ -465,6 +466,15 @@ namespace SharpBoot
                 bool exitCaught = false;
                 p.Exited += delegate
                 {
+
+                    if (p.ExitCode != 0)
+                    {
+
+                        MessageBox.Show(@"error occurred during ISO Creation Message is :" + Environment.NewLine + ErrorMessage + Environment.NewLine
+                            + @"ExitCode is" + p.ExitCode, $@"mkisofs error occurred", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+
+             
                     exitCaught = true;
                     GenF(f);
                    
@@ -498,13 +508,14 @@ namespace SharpBoot
                     Thread.Sleep(500);
                     iter++;
                 }
-                //Redirect standard output And flushed process execution
+
+                // TODO: Redirect standard output And flushe process execution
                 try
                 {
                     p.Start();
                     p.BeginOutputReadLine();
                     p.BeginErrorReadLine();
-                   
+
                     // don't Force WaitForExit here;
                     while (!p.WaitForExit(1))
                     {
@@ -513,11 +524,16 @@ namespace SharpBoot
                         Application.DoEvents();
                     }
                 }
-                catch (FileNotFoundException)
+               
+               
+                catch (Exception ex)
                 {
+                    Debug.WriteLine(ex);
+                    MessageBox.Show($@"mkisofs.exe error occurred during the creation of ISO with Message :\r\n" + ex.Message);
+                   
                 }
-            
-             
+
+
             }
             Program.SupportAccent = false;
 
@@ -583,6 +599,9 @@ namespace SharpBoot
         }
 
 
+        /// <summary>
+        /// Get mkisofs output data in Rich TextBox and handle progress printing
+        /// </summary>
         private void OnDataReceived(object sender, DataReceivedEventArgs e)
         {
             if (ricGeniso.InvokeRequired)
@@ -622,6 +641,9 @@ namespace SharpBoot
             }
         }
 
+        /// <summary>
+        /// Scroll to bottom when new line is written to output
+        /// </summary>
         private void ricGeniso_TextChanged(object sender, EventArgs e)
         {
             ricGeniso.SelectionStart = ricGeniso.Text.Length;
